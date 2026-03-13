@@ -1,0 +1,24 @@
+langchain==0.2.16
+langchain-community==0.2.16
+langchain-huggingface
+chromadb==0.5.5
+pypdf==4.3.1
+unstructured
+sentence-transformers
+transformers
+accelerate
+bitsandbytes
+streamlit
+torch --quiet
+
+langchain-chroma
+posthog
+
+pydantic
+#  langchain-community
+# langchain-ollama 
+# langchain-text-splitters 
+# langchain-core 
+# langchain-community
+
+# langchain-ollama
