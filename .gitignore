@@ -65,6 +65,7 @@ db.sqlite3-journal
 instance/
 .webassets-cache
 
+chroma_db/
 # Scrapy stuff:
 .scrapy
 
