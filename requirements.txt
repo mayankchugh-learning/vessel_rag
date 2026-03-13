@@ -9,11 +9,9 @@ transformers
 accelerate
 bitsandbytes
 streamlit
-torch --quiet
-
+torch
 langchain-chroma
 posthog
-
 pydantic
 #  langchain-community
 # langchain-ollama 

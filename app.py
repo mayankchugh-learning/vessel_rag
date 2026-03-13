@@ -28,6 +28,30 @@ CHUNK_OVERLAP   = 200
 TOP_K           = 5
 
 
+def get_ollama_models() -> tuple[list[str], list[str]]:
+    import requests
+
+    response = requests.get(f"{OLLAMA_BASE_URL}/api/tags", timeout=3)
+    response.raise_for_status()
+    names = [model.get("name", "") for model in response.json().get("models", [])]
+    bases = [name.split(":")[0] for name in names if name]
+    return names, bases
+
+
+def resolve_embedding_model() -> str:
+    names, bases = get_ollama_models()
+    if EMBED_MODEL in names or EMBED_MODEL in bases:
+        return EMBED_MODEL
+
+    embed_candidates = [name for name in names if "embed" in name.lower()]
+    if embed_candidates:
+        return embed_candidates[0]
+
+    raise RuntimeError(
+        f"No Ollama embedding model available. Pull one first: `ollama pull {EMBED_MODEL}`"
+    )
+
+
 # ── LAZY IMPORTS (cached) ─────────────────────────────────────
 @st.cache_resource(show_spinner=False)
 def load_chain():
@@ -63,8 +87,13 @@ def load_chain():
     chunks = splitter.split_documents(documents)
 
     # ── Embeddings + Vector Store ─────────────────────────────
+    try:
+        embed_model = resolve_embedding_model()
+    except Exception as e:
+        return None, str(e)
+
     embeddings = OllamaEmbeddings(
-        model=EMBED_MODEL,
+        model=embed_model,
         base_url=OLLAMA_BASE_URL
     )
 
